@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
+import {Container} from "reactstrap";
 import {Search} from "./Components/Search.js"
 import {Header} from "./Components/Header.js"
 import {List} from "./Components/List.js"
 import {Historic} from "./Components/Historic.js"
+
+var colors = ["white", "blue", "yellow", "pink"]
 
 class App extends Component {
   constructor(props){
@@ -17,10 +20,7 @@ class App extends Component {
     this.searchInput = this.searchInput.bind(this);
     this.submit = this.submit.bind(this);
   }
-  componentWillMount(){
-    
-
-  }
+  
   searchInput(e){
     e.preventDefault();
     this.setState({
@@ -30,6 +30,10 @@ class App extends Component {
   submit(e){
     e.preventDefault();
     console.log(this.state.search);
+    if(this.state.search.includes(" ")){
+      alert("You can´t use spaces in a tag");
+      return;
+    }
     let allTags = {};
     if(this.state.search !== ""){
       let baseUrl = "https://instagram.com/explore/tags/" + this.state.search + "/?__a=1";
@@ -79,6 +83,10 @@ class App extends Component {
           "Content-Type": "application/json"},
           body: JSON.stringify({
             tag: this.state.search
+          }).then()
+          .then()
+          .catch(err =>{
+            alert("Se produjo un error");
           })
 
         }).then(
@@ -87,17 +95,24 @@ class App extends Component {
           .then(json =>{
           this.setState({history: json.tags, list: bestTen});
           })
-        );
+        ).catch((error)=>{
+          alert("There was an error");
+        });
 
         
+      })
+      .catch((err) =>{
+        alert('404 Not Faound');
       })
     }
     
     
   }
   render() {
+    let bgcolor = Math.random() * 3
     return (
-      <div className="App">
+      <Container fluid>
+      <div className="App" style={{backgroundColor: "#f2f2f2"}}  >
         <Header />
         <br/>
         <br/>
@@ -111,6 +126,7 @@ class App extends Component {
             <Historic tags={this.state.history} />
         </div>
       </div>
+      </Container>
     );
   }
 }

@@ -26,3 +26,8 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.Jumbotron{
+  color: white;
+  background-color: #ff2ba6;
+}
