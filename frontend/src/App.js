@@ -1,17 +1,28 @@
 import React, { Component } from 'react';
 import './App.css';
 import {Search} from "./Components/Search.js"
+import {Header} from "./Components/Header.js"
+import {List} from "./Components/List.js"
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
       search: "",
-      list: ""
+      list: [],
+      history: []
     }
 
     this.searchInput = this.searchInput.bind(this);
     this.submit = this.submit.bind(this);
+  }
+  componentDidMount(){
+    fetch("/tags")
+    .then(response => response.json())
+    .then(json =>{
+      console.log(json);
+    });
+
   }
   searchInput(e){
     e.preventDefault();
@@ -34,12 +45,12 @@ class App extends Component {
           let tagArray = tags.split(" ");
           for(let i = 0; i < tagArray.length; i++){
             if(tagArray[i].startsWith("#")){
-              if(allTags[tagArray[i]] !== undefined){
-                allTags[tagArray[i]] += 1;
+              if(allTags[tagArray[i].toUpperCase()] !== undefined){
+                allTags[tagArray[i].toUpperCase()] += 1;
 
               }
               else{
-                allTags[tagArray[i]] = 1;
+                allTags[tagArray[i].toUpperCase()] = 1;
               }
             }
           }
@@ -50,14 +61,25 @@ class App extends Component {
           
           return b.value - a.value;
         });
-        let plist = [];
-        orderedArray.map(object =>{
-          plist.push(object);
-        });
-        console.log(plist);
+        console.log(orderedArray);
+        let bestTen = [];
+        let max;
+        if(orderedArray.length < 10){
+          max = orderedArray.length;
+        }
+        else{
+          max = 10;
+        }
+        for(let c = 0; c < max; c++){
+          bestTen.push(orderedArray[c]);
+        }
+
+        console.log(bestTen);
+
         this.setState({
-          list: plist
+          list: bestTen
         });
+        
       })
     }
     
@@ -66,8 +88,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Header />
+        <br/>
+        <br/>
         <Search onInput={this.searchInput} onSubmit={this.submit} />
-
+        <br/>
+        <br/>
+        <div className = "col-sm-6">
+          <List tags={this.state.list} />
+        </div>
       </div>
     );
   }

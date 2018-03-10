@@ -1,12 +1,49 @@
 var express = require('express');
 var router = express.Router();
-const request = require("request");
+const MongoClient = require("mongodb").MongoClient;
 
-/* GET home page. */
-router.get('/hola', function(req, res, next) {
-  res.status(200).json({
-    message: "Hola"
+
+router.get("/tags", function(req, res, next){
+  let url = "mongodb://elvargas:dictador@ds163418.mlab.com:63418/instatag";
+  MongoClient.connect(url, function(err, db){
+    if(err){
+      throw err;
+    }
+    let collection = db.collection("tags");
+    let objects = collection.find({}).toArray(function (err, docs){
+      if(err){
+        throw err;
+      }
+     
+      res.status(200).json({
+        status: 200,
+        tags: docs
+      });
+      db.close();
+    });
+
   });
+
+  router.post("/tags", function(req, res, next){
+    let ptag = req.body.tag;
+    let url = "mongodb://elvargas:dictador@ds163418.mlab.com:63418/instatag";
+    MongoClient.connect(url, function(err, db){
+      if(err){
+        throw err;
+      }
+      else{
+        let collection = db.collection("tags");
+        collection.insert({tag: ptag});
+        res.status(200).json({
+          message: "Object Added"
+        });
+        db.close();
+      }
+    });
+    
+  });
+
+
 });
 
 module.exports = router;
