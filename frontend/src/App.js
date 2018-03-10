@@ -3,6 +3,7 @@ import './App.css';
 import {Search} from "./Components/Search.js"
 import {Header} from "./Components/Header.js"
 import {List} from "./Components/List.js"
+import {Historic} from "./Components/Historic.js"
 
 class App extends Component {
   constructor(props){
@@ -16,12 +17,8 @@ class App extends Component {
     this.searchInput = this.searchInput.bind(this);
     this.submit = this.submit.bind(this);
   }
-  componentDidMount(){
-    fetch("/tags")
-    .then(response => response.json())
-    .then(json =>{
-      console.log(json);
-    });
+  componentWillMount(){
+    
 
   }
   searchInput(e){
@@ -75,10 +72,23 @@ class App extends Component {
         }
 
         console.log(bestTen);
+        fetch("/tags", {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+          "Content-Type": "application/json"},
+          body: JSON.stringify({
+            tag: this.state.search
+          })
 
-        this.setState({
-          list: bestTen
-        });
+        }).then(
+          fetch("/tags")
+          .then(response => response.json())
+          .then(json =>{
+          this.setState({history: json.tags, list: bestTen});
+          })
+        );
+
         
       })
     }
@@ -94,8 +104,11 @@ class App extends Component {
         <Search onInput={this.searchInput} onSubmit={this.submit} />
         <br/>
         <br/>
-        <div className = "col-sm-6">
-          <List tags={this.state.list} />
+        <div className="row">
+          <div className = "col-sm-6">
+            <List tags={this.state.list} />
+          </div>
+            <Historic tags={this.state.history} />
         </div>
       </div>
     );
