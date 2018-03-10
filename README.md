@@ -41,6 +41,8 @@ Fourthly, run the frontend using the yarn start command
 $ yarn start
 ```
 
+Note: You need to change the value of the database credentials that are in routes/index.js
+
 Know, both applications should be running.
 
 ## Deployment
