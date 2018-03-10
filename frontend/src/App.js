@@ -20,12 +20,13 @@ class App extends Component {
 
     this.searchInput = this.searchInput.bind(this);
     this.submit = this.submit.bind(this);
+    this.sendMostVisited = this.sendMostVisited.bind(this);
   }
 
-  componentDidMount(){
-    if(this.state.list > 0){
-      let ptag = this.state.list[0].tag;
-      let pvalue = this.state.list[0].pvalue;
+  sendMostVisited(pList){
+    if(pList.length > 0){
+      let ptag = pList[0].key;
+      let pvalue = pList[0].value;
       fetch("/mostRepeated", {
         method: "POST",
         headers: {
@@ -34,13 +35,10 @@ class App extends Component {
         body: JSON.stringify({
           tag: ptag,
           value: pvalue
-        }).then()
-        .then()
-        .catch(err =>{
-          alert("Se produjo un error");
         })
-
-      })
+      }).catch(err =>{
+        alert("Se produjo un error");
+      });
     }
   }
   
@@ -114,6 +112,7 @@ class App extends Component {
           fetch("/tags")
           .then(response => response.json())
           .then(json =>{
+          this.sendMostVisited(bestTen);
           this.setState({history: json.tags, list: bestTen});
           })
         ).catch((error)=>{

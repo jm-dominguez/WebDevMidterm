@@ -10,7 +10,7 @@ router.get("/tags", function(req, res, next){
       throw err;
     }
     let collection = db.collection("tags");
-    let objects = collection.find({}).toArray(function (err, docs){
+    collection.find({}).toArray(function (err, docs){
       if(err){
         throw err;
       }
@@ -80,6 +80,8 @@ router.get("/mostRepeated", function(req, res, next){
           status: 200,
           message: docs
         });
+
+        db.close();
         
       });
     }
