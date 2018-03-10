@@ -5,6 +5,7 @@ import {Search} from "./Components/Search.js"
 import {Header} from "./Components/Header.js"
 import {List} from "./Components/List.js"
 import {Historic} from "./Components/Historic.js"
+import {Hashtag} from "./Components/Hashtag.js"
 
 var colors = ["white", "blue", "yellow", "pink"]
 
@@ -19,6 +20,28 @@ class App extends Component {
 
     this.searchInput = this.searchInput.bind(this);
     this.submit = this.submit.bind(this);
+  }
+
+  componentDidMount(){
+    if(this.state.list > 0){
+      let ptag = this.state.list[0].tag;
+      let pvalue = this.state.list[0].pvalue;
+      fetch("/mostRepeated", {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+        "Content-Type": "application/json"},
+        body: JSON.stringify({
+          tag: ptag,
+          value: pvalue
+        }).then()
+        .then()
+        .catch(err =>{
+          alert("Se produjo un error");
+        })
+
+      })
+    }
   }
   
   searchInput(e){
@@ -83,11 +106,9 @@ class App extends Component {
           "Content-Type": "application/json"},
           body: JSON.stringify({
             tag: this.state.search
-          }).then()
-          .then()
-          .catch(err =>{
-            alert("Se produjo un error");
           })
+          }).catch(err =>{
+            alert("Se produjo un error");
 
         }).then(
           fetch("/tags")
@@ -101,9 +122,7 @@ class App extends Component {
 
         
       })
-      .catch((err) =>{
-        alert('404 Not Faound');
-      })
+      
     }
     
     
@@ -116,7 +135,14 @@ class App extends Component {
         <Header />
         <br/>
         <br/>
-        <Search onInput={this.searchInput} onSubmit={this.submit} />
+        <div className = "row">
+          <div className="col-sm-6">
+          <Search onInput={this.searchInput} onSubmit={this.submit} />
+          </div>
+          <div className = "col-sm-6">
+          <Hashtag />
+          </div>
+        </div>
         <br/>
         <br/>
         <div className="row">

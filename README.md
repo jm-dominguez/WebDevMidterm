@@ -59,6 +59,9 @@ This commands updates the build folder which contains the static components that
 * [React](https://reactjs.org/) - Javascript frontend library
 * [NPM](https://www.npmjs.com/) - Depedency Management
 
+##Creative Component
+My creative component for this web page, was to add a section that displays the tag that has registered the maximum number of repetitions.
+
 
 
 ## Authors
